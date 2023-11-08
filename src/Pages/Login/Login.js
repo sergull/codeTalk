@@ -1,13 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../Components/Button';
 import Input from '../../Components/Input';
 import styles from "./Login.style"
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import auth from "@react-native-firebase/auth";
+
 
 const Login = ({ navigation }) => {
+
+    const [loading, setLoading] = useState(false); 
+
     const validationSchema = Yup.object().shape({
 
         email: Yup
@@ -32,9 +37,17 @@ const Login = ({ navigation }) => {
         navigation.navigate("RegisterPage")
     }
 
-    const handleFormSubmit = (formValues) => {
-        console.log(formValues)
-    }
+    const handleFormSubmit = async ({email, password}) => {
+        try{
+            setLoading(true);
+            await auth().signInWithEmailAndPassword(email, password);
+            navigation.navigate("RoomsPage");
+            setLoading(false);
+        } catch (error){
+            console.log(error.message);
+            setLoading(false);
+        }
+        console.log(email, password)    }
 
     return (
         <View style={styles.container}>
@@ -57,7 +70,7 @@ const Login = ({ navigation }) => {
                         </>
                     )}
                 </Formik>
-                <Button text="Kayıt Ol" theme="secondary" onPress={() => handlePress()} />
+                <Button text="Kayıt Ol" theme="secondary" onPress={() => handlePress()} loading={loading} />
             </View>
         </View>
     );

@@ -1,13 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../Components/Button';
 import Input from '../../Components/Input';
 import styles from "./Register.style"
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import auth from "@react-native-firebase/auth";
+
 
 const Register = ({ navigation }) => {
+
+    const [loading, setLoading] = useState(false);
 
     const validationSchema = yup.object().shape({
         email: yup
@@ -41,8 +45,18 @@ const Register = ({ navigation }) => {
         navigation.navigate("LoginPage")
     }
 
-    const handleFormSubmit = (formValues) => {
-        console.log(formValues)
+    const handleFormSubmit = async ({email, password}) => {
+        try{
+            setLoading(true);
+            await auth().createUserWithEmailAndPassword(email, password);
+            navigation.navigate("LoginPage");
+            setLoading(false);
+
+        } catch(error) {
+            console.log(error.message);
+            setLoading(false);
+        }
+        console.log(email, password)
     }
 
     return (
@@ -67,7 +81,7 @@ const Register = ({ navigation }) => {
                             {touched.confirmPassword && errors.confirmPassword &&
                                 <Text style={{ fontSize: 13, color: '#D80032', fontStyle: 'italic', fontWeight: 'bold', paddingLeft: 15 }}>{errors.confirmPassword}</Text>
                             }
-                            <Button text="Kayıt Ol" onPress={handleSubmit} />
+                            <Button text="Kayıt Ol" onPress={handleSubmit} loading={loading} />
                         </>
                     )}
                 </Formik>

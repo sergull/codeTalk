@@ -9,7 +9,7 @@ const Button = ({ text, onPress, loading, theme = "primary" }) => {
             onPress={onPress} disabled={loading}
         >
             {loading ? (
-                <ActivityIndicator size={large} color="white" />
+                <ActivityIndicator color="white" />
             ) :
             (
                 <View>
