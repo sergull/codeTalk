@@ -5,7 +5,7 @@ const Input = ({placeholder, value, onType, isSecure}) => {
 
     return (
         <View style={styles.container}>
-            <TextInput placeholder={placeholder} placeholderTextColor="white" 
+            <TextInput autoCapitalize="none" placeholder={placeholder} placeholderTextColor="white" 
             value={value} onChangeText={onType} secureTextEntry={isSecure} />
         </View>
     )
