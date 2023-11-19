@@ -5,11 +5,11 @@ import ContentInput from "../../Components/modal/ContentInput";
 import database from "@react-native-firebase/database"
 import auth from "@react-native-firebase/auth"
 import parseContentData from "../../utils/parseContentData";
-import RoomCard from "../../Components/RoomCard";
+import RoomCard from "../../Components/Cards/RoomCard";
 import { showMessage } from "react-native-flash-message";
 
 
-const Rooms = ({navigation}) => {
+const Rooms = ({ navigation }) => {
 
     const [inputModalVisible, setInputModalVisible] = useState(false);
     const [contentList, setContentList] = React.useState([]);
@@ -20,10 +20,7 @@ const Rooms = ({navigation}) => {
             .ref("rooms/")
             .on("value", snapshot => {
                 const contentData = snapshot.val();
-                //db'de veri yoksa hata kontrolü
-                if(!contentData){
-                    return;
-                }
+                //db'de veri yoksa hata kontrolü yaparak boş veri gönderme
                 const parsedData = parseContentData(contentData || {});
                 setContentList(parsedData);
                 console.log(parsedData);
@@ -31,7 +28,7 @@ const Rooms = ({navigation}) => {
     }, [])
 
 
-    
+
 
     const handleInputToggle = () => {
         setInputModalVisible(!inputModalVisible)
@@ -44,11 +41,11 @@ const Rooms = ({navigation}) => {
         showMessage({
             message: 'Oda Oluşturuldu',
             type: 'success',
-          });
+        });
     }
 
     //push db
-    const sendContent =  (content) => {
+    const sendContent = (content) => {
 
         const userMail = auth().currentUser.email;
 
@@ -64,18 +61,18 @@ const Rooms = ({navigation}) => {
     }
 
     const handleCard = (item) => {
-        navigation.navigate("MessagePage", {item})
+        navigation.navigate("MessagePage", { item })
     }
 
     const renderContent = ({ item }) => {
-        return <RoomCard text={item.room} onPress={()=>handleCard(item)}/>;
+        return <RoomCard text={item.room} onPress={() => handleCard(item)} />;
     }
 
     return (
-        <View style={{ backgroundColor: "white", flex: 1, alignItems:"center",}}>
-            <FlatList data={contentList}  renderItem={renderContent} numColumns="2"/>
+        <View style={{ backgroundColor: "white", flex: 1, alignItems: "center", }}>
+            <FlatList data={contentList} renderItem={renderContent} numColumns="2" />
             <FloatinButton name="plus" onPress={handleInputToggle} />
-            <ContentInput visible={inputModalVisible} onClose={handleInputToggle} onSend={handleSendContent} />
+            <ContentInput visible={inputModalVisible} onClose={handleInputToggle} onSend={handleSendContent} buttonText="Ekle" />
         </View>
 
     )

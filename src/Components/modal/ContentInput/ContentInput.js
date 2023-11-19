@@ -6,7 +6,7 @@ import Modal from "react-native-modal"
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const ContentInput = ({visible, onClose, onSend}) => {
+const ContentInput = ({visible, onClose, onSend, buttonText}) => {
 
     const [text, setText] = useState(null);
 
@@ -23,7 +23,7 @@ const ContentInput = ({visible, onClose, onSend}) => {
         <Modal style={styles.modal} isVisible={visible} onSwipeComplete={onClose} swipeDirection="down" onBackdropPress={onClose} onBackButtonPress={onClose}>
             <View style={styles.container}>
                 <TextInput style={styles.input} multiline placeholder="Oda adı..." onChangeText={setText} />
-                <Button style={styles.button} onPress={handleSend} text="Ekle" />
+                <Button style={styles.button} onPress={handleSend} text={buttonText} />
             </View>
         </Modal>
     )
